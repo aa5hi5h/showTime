@@ -1,8 +1,8 @@
-import { CreateTrpcRouter, PublicProcedure } from "..";
+import { CreateTrpcRouter, protectedProcedure, PublicProcedure } from "..";
 
 
 export const appRouter = CreateTrpcRouter({
-    getMessage: PublicProcedure.query(({}) => {
+    getMessage: protectedProcedure("Admin").query(({ctx}) => {
         
         return { title: "Worst descission of my life ", description: "Joining this college" }
     })
