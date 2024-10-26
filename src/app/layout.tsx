@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { TRPCClientProvider} from "@/trpc/client";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,6 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
+      <TRPCClientProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -33,6 +36,7 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+    </TRPCClientProvider>
     </ClerkProvider>
   );
 }
