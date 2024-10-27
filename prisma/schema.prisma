@@ -18,6 +18,9 @@ model User {
   admin    Admin?
   manager Manger?
 
+  Bookings Booking[]
+  Tickets Ticket[]
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -41,6 +44,148 @@ model Manger {
   user User @relation(fields: [id] , references: [id])
   userId String @unique
 
+  cinameID String @db.ObjectId 
+  cinema Cinema @relation(fields: [cinameID], references: [id])
+
   createdAt DateTime @default(now())
   udpatedAt DateTime @updatedAt
+}
+
+
+model Cinema {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  Screens Screen[]
+  address Address?
+  Managers Manger[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Address {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  lng Float
+  lat Float
+  address String
+  CinemaId String @db.ObjectId @unique
+  Cinema Cinema @relation(fields: [CinemaId],references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Screen {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  number Int
+
+  CinemaId String @db.ObjectId
+  Cinema Cinema @relation(fields: [CinemaId], references: [id])
+  Seats Seat[]
+  showTime ShowTime[]
+  SoundSystem SoundSystem? @default(DOLBY_ATMOS)
+  ProjectionType ProjectionType? @default(PVR)
+
+  price Float @default(180)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Seat {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  row Int
+  coloumn Int
+  ScreenId String @db.ObjectId
+  Screen Screen @relation(fields: [ScreenId],references: [id])
+  Bookings Booking[]
+
+  @@index([row,coloumn,ScreenId])
+}
+
+model ShowTime {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  startTime DateTime
+
+  movieId String @db.ObjectId
+  Movie Movie @relation(fields: [movieId], references: [id])
+  ScreenId String @db.ObjectId
+  Screen Screen @relation(fields: [ScreenId], references: [id])
+  Bookings Booking[]
+  status ShowTimeStatus?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Movie {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  director String
+  duration Float
+  poster String
+  releaseDate DateTime
+  Genere GENERE
+  
+  showTime ShowTime[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id])
+
+  showTimeId String @db.ObjectId
+  ShowTime  ShowTime @relation(fields: [showTimeId], references: [id])
+
+  row Int
+  column Int
+  seatId String @db.ObjectId
+  Seat Seat @relation(fields: [seatId], references: [id])
+
+  Ticket Ticket @relation(fields: [TicketId],references: [id])
+  TicketId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Ticket {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  qrCode String
+  uId String @db.ObjectId
+  user User @relation(fields: [uId], references: [id])
+  Bookings Booking[]
+ }
+
+ enum SoundSystem {
+  DOLBY_ATMOS
+  HDR
+  SUPERLEX
+ }
+
+ enum ProjectionType {
+  HDR
+  PVR
+ SUPERLEX
+
+ }
+
+enum GENERE {
+  ROMCOM
+  FUNNY
+  ADVENTURE
+  THRILL
+  HAUNT
+  SUPERHERO
+
+}
+
+enum ShowTimeStatus {
+  POSTPONNED
+  CANCELED
 }
