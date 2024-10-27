@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCClientProvider} from "@/trpc/client";
+import Navbar from "@/components/Navbar";
+import { Toast } from "@radix-ui/react-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 
 const geistSans = localFont({
@@ -33,7 +36,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="max-w-7xl mx-auto">
+        <Navbar />
         {children}
+        <Toaster />
+        </div>
       </body>
     </html>
     </TRPCClientProvider>

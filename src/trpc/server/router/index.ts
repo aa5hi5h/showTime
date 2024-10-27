@@ -1,11 +1,9 @@
 import { CreateTrpcRouter, protectedProcedure, PublicProcedure } from "..";
+import { AdminRouter } from "./admin";
 
 
 export const appRouter = CreateTrpcRouter({
-    getMessage: protectedProcedure("Admin").query(({ctx}) => {
-        
-        return { title: "Worst descission of my life ", description: "Joining this college" }
-    })
+    admin: AdminRouter
 })
 
 export type AppRouter = typeof appRouter
