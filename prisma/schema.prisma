@@ -57,6 +57,8 @@ model Manger {
 model Cinema {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  name  String
+
   Screens Screen[]
   address Address?
   Managers Manger[]
@@ -66,8 +68,8 @@ model Cinema {
 
 model Address {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  lng Float
-  lat Float
+  lng Float?
+  lat Float?
   address String
   CinemaId String @db.ObjectId @unique
   Cinema Cinema @relation(fields: [CinemaId],references: [id])
